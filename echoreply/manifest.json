@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "default_locale": "en",
+  "version": "1.0.0",
+  "description": "__MSG_extDesc__",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_icon": "icons/icon48.png",
+    "default_title": "EchoReply"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://api.anthropic.com/*",
+    "https://api.openai.com/*"
+  ],
+  "options_page": "options/options.html",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "sidebar/sidebar.html",
+        "sidebar/sidebar.css",
+        "sidebar/sidebar.js",
+        "lib/aiProvider.js",
+        "lib/prompts.js",
+        "lib/gmailParser.js",
+        "lib/insertDraft.js",
+        "lib/i18n.js",
+        "lib/accountStorage.js",
+        "_locales/en/messages.json",
+        "_locales/zh_CN/messages.json"
+      ],
+      "matches": ["https://mail.google.com/*"]
+    }
+  ]
+}

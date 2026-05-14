@@ -1,0 +1,278 @@
+<!--
+  EchoReply sidebar markup.
+  This HTML is injected into mail.google.com as a child of <body> by content.js.
+  All selectors are prefixed with "er-" to avoid colliding with Gmail's styles.
+  Strings tagged with data-i18n="<key>" are replaced at runtime by lib/i18n.js.
+-->
+<div class="er-shell" id="er-shell" data-state="empty">
+  <header class="er-header">
+    <div class="er-brand">
+      <span class="er-logo">✦</span>
+      <span class="er-brand-name">EchoReply</span>
+    </div>
+    <div class="er-header-actions">
+      <button
+        type="button"
+        class="er-icon-btn"
+        id="er-settings-btn"
+        data-i18n-aria-label="settings"
+        data-i18n-title="settings"
+        aria-label="Open settings"
+        title="Settings"
+      >⚙</button>
+      <button
+        type="button"
+        class="er-icon-btn"
+        id="er-collapse-btn"
+        data-i18n-aria-label="collapse"
+        data-i18n-title="collapse"
+        aria-label="Collapse sidebar"
+        title="Collapse"
+      >›</button>
+    </div>
+  </header>
+
+  <div class="er-scroll">
+    <!-- Empty state (no email open) -->
+    <div class="er-state er-state-empty">
+      <div class="er-empty-icon">✦</div>
+      <p class="er-empty-title" data-i18n="emptyTitle">Open an email</p>
+      <p class="er-empty-hint" data-i18n="emptyHint">EchoReply will analyze the intent, tone, and reply strategy for you.</p>
+    </div>
+
+    <!-- No API key state -->
+    <div class="er-state er-state-no-key">
+      <div class="er-empty-icon">🔑</div>
+      <p class="er-empty-title" data-i18n="noKeyTitle">Set your API key</p>
+      <p class="er-empty-hint" data-i18n="noKeyHint">Add a Claude or OpenAI key in settings to get started.</p>
+      <button type="button" class="er-primary-btn" id="er-open-settings" data-i18n="openSettings">Open Settings</button>
+    </div>
+
+    <!-- Style sample banner (shown only when in Sent folder) -->
+    <div class="er-style-banner" id="er-style-banner" hidden>
+      <div class="er-style-banner-text">
+        <strong data-i18n="styleBannerTitle">Teach EchoReply your style.</strong>
+        <span data-i18n="styleBannerBody">Save this sent email as a writing sample to make future drafts sound like you.</span>
+      </div>
+      <div class="er-style-banner-actions">
+        <button type="button" class="er-primary-btn" id="er-save-sample" data-i18n="styleBannerSaveBtn">Save sample</button>
+        <button type="button" class="er-ghost-btn er-chip-btn" id="er-autoscan-btn" data-i18n="styleAutoScan">Auto-scan 10</button>
+        <span class="er-style-count" id="er-style-count"></span>
+      </div>
+
+      <!-- Progress UI shown during an active scan; replaces the action row. -->
+      <div class="er-autoscan-progress" id="er-autoscan-progress" hidden>
+        <div class="er-autoscan-text" id="er-autoscan-text">Scanning…</div>
+        <div class="er-autoscan-bar">
+          <div class="er-autoscan-bar-fill" id="er-autoscan-bar"></div>
+        </div>
+        <button type="button" class="er-ghost-btn er-chip-btn" id="er-autoscan-cancel" data-i18n="autoScanCancel">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Live Coach result — appears only when the coach has something to say.
+         No permanent section; zero footprint when idle. -->
+    <div class="er-coach-result" id="er-coach-result" hidden></div>
+
+    <!-- Thread summary card (only shown for multi-message threads) -->
+    <div class="er-card er-thread-summary" id="er-thread-summary-card" hidden>
+      <div class="er-card-label" data-i18n="threadSummaryLabel">Thread Summary</div>
+      <div class="er-card-body" id="er-thread-summary-body"></div>
+    </div>
+
+    <!-- Analysis cards -->
+    <section class="er-cards" id="er-cards">
+      <!-- Merged "THE EMAIL" card: intent + meta badges + temp/strategy pills -->
+      <div class="er-card er-email-card" data-card="email">
+        <div class="er-card-label" data-i18n="cardEmail">The Email</div>
+        <div class="er-card-body">
+          <div class="er-intent-text" id="er-intent-body">
+            <div class="er-skeleton er-skeleton-line"></div>
+            <div class="er-skeleton er-skeleton-line short"></div>
+          </div>
+
+          <div class="er-decoder-meta" id="er-decoder-meta">
+            <span class="er-thread-badge" id="er-thread-badge" hidden></span>
+            <span class="er-cc-badge" id="er-cc-badge" hidden data-i18n="ccBadge">CC</span>
+            <span class="er-recall-badge" id="er-recall-badge" hidden></span>
+          </div>
+
+          <div class="er-pill-row" id="er-pill-row">
+            <span class="er-temp-pill" id="er-temp-pill">—</span>
+            <span class="er-strategy-pill" id="er-strategy-pill">—</span>
+          </div>
+
+          <div class="er-decoder-advice" id="er-strategy-advice">
+            <div class="er-skeleton er-skeleton-line"></div>
+          </div>
+          <!-- Kept for JS compatibility; surfaced as the temp pill's tooltip. -->
+          <span id="er-temp-note" hidden></span>
+        </div>
+      </div>
+
+      <div class="er-card" data-card="clarify" id="er-clarify-card" hidden>
+        <div class="er-card-label" data-i18n="cardClarify">Clarify Before Replying</div>
+        <div class="er-card-body">
+          <ul class="er-clarify-list" id="er-clarify-list"></ul>
+        </div>
+      </div>
+
+      <div class="er-card" data-card="actions" id="er-actions-card" hidden>
+        <div class="er-card-label" data-i18n="cardActions">Action Items</div>
+        <div class="er-card-body">
+          <ul class="er-actions-list" id="er-actions-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Replies -->
+    <section class="er-section" id="er-drafts-section">
+      <div class="er-section-header">
+        <span class="er-section-label" data-i18n="draftedReplies">Replies</span>
+        <label class="er-mini-toggle" id="er-reply-all-wrap" hidden>
+          <input type="checkbox" id="er-reply-all" />
+          <span data-i18n="replyAll">Reply All</span>
+        </label>
+      </div>
+
+      <!-- Shown instead of the draft pane when no reply is needed
+           (DONT_REPLY or automated sender). -->
+      <div class="er-no-reply-notice" id="er-no-reply-notice" hidden>
+        <span class="er-no-reply-text" id="er-no-reply-text" data-i18n="noReplyNeeded">No reply needed.</span>
+        <button type="button" class="er-ghost-btn er-chip-btn" id="er-draft-anyway" data-i18n="draftAnyway">Draft anyway</button>
+      </div>
+
+      <!-- Segmented style switcher -->
+      <div class="er-style-tabs" id="er-style-tabs" role="tablist">
+        <button type="button" class="er-style-tab" data-style="professional" data-active="true">
+          <span class="er-style-tab-emoji">🎩</span>
+          <span data-i18n="styleProfessional">Professional</span>
+        </button>
+        <button type="button" class="er-style-tab" data-style="warm">
+          <span class="er-style-tab-emoji">🤝</span>
+          <span data-i18n="styleWarm">Warm</span>
+        </button>
+        <button type="button" class="er-style-tab" data-style="confident">
+          <span class="er-style-tab-emoji">⚡</span>
+          <span data-i18n="styleConfident">Confident</span>
+        </button>
+      </div>
+
+      <!-- One draft pane — shows the active style's draft. -->
+      <div class="er-draft-pane" id="er-draft-pane" data-advanced="false">
+        <div class="er-draft-text" data-text contenteditable="false" spellcheck="true"></div>
+
+        <div class="er-draft-actions">
+          <button type="button" class="er-ghost-btn" data-action="copy" data-i18n="actionCopy">Copy</button>
+          <button type="button" class="er-primary-btn" data-action="insert" data-i18n="actionInsert">Insert</button>
+          <button type="button" class="er-icon-btn er-more-btn" data-action="more" data-i18n-title="moreOptions" title="More options">⋯</button>
+        </div>
+
+        <!-- Advanced controls — visibility driven by the pane's data-advanced. -->
+        <div class="er-draft-advanced">
+          <div class="er-variants-row" data-variants hidden></div>
+          <div class="er-lang-row">
+            <span class="er-lang-label" data-i18n="langLabel">Lang</span>
+            <select class="er-lang-select" data-lang>
+              <option value="auto">Auto</option>
+              <option value="en">EN</option>
+              <option value="zh">中文</option>
+              <option value="es">ES</option>
+              <option value="ja">日本</option>
+              <option value="fr">FR</option>
+              <option value="de">DE</option>
+            </select>
+          </div>
+          <div class="er-refine-row" data-refine hidden>
+            <div class="er-refine-quick">
+              <button type="button" class="er-chip-btn" data-refine-preset="shorter" data-i18n="refineShorter">Shorter</button>
+              <button type="button" class="er-chip-btn" data-refine-preset="softer" data-i18n="refineSofter">Softer</button>
+              <button type="button" class="er-chip-btn" data-refine-preset="direct" data-i18n="refineDirect">More direct</button>
+              <button type="button" class="er-chip-btn er-reset-btn" data-refine-reset hidden data-i18n="refineReset">↺ Reset</button>
+            </div>
+            <div class="er-refine-custom">
+              <input
+                type="text"
+                class="er-refine-input"
+                data-refine-input
+                data-i18n-placeholder="refinePlaceholder"
+                placeholder="Tell me what to change…"
+              />
+              <button type="button" class="er-ghost-btn er-chip-btn" data-refine-submit>↻</button>
+            </div>
+          </div>
+          <button type="button" class="er-ghost-btn er-full-soft" data-action="tone" data-i18n="actionCheckTone">Check tone</button>
+        </div>
+
+        <div class="er-draft-error" hidden></div>
+      </div>
+    </section>
+
+    <!-- Tone Check — collapsed by default; click the header to expand. -->
+    <section class="er-section er-collapsible" id="er-tone-section" data-open="false">
+      <button type="button" class="er-collapsible-header" id="er-tone-toggle">
+        <span class="er-section-label" data-i18n="toneCheck">Tone Check</span>
+        <span class="er-collapsible-arrow">▾</span>
+      </button>
+      <div class="er-collapsible-body">
+        <textarea
+          id="er-tone-input"
+          class="er-textarea"
+          data-i18n-placeholder="tonePlaceholder"
+          placeholder="Paste your draft to check the tone…"
+          rows="5"
+        ></textarea>
+        <button type="button" class="er-primary-btn er-full" id="er-tone-check-btn" data-i18n="toneCheckBtn">
+          Check My Draft
+        </button>
+        <div class="er-tone-result" id="er-tone-result" hidden></div>
+      </div>
+    </section>
+
+    <!-- Decoder error state -->
+    <div class="er-decoder-error" id="er-decoder-error" hidden>
+      <p class="er-error-text" id="er-decoder-error-text"></p>
+      <button type="button" class="er-ghost-btn" id="er-decoder-retry" data-i18n="actionRetry">Retry</button>
+    </div>
+  </div>
+
+  <footer class="er-footer">
+    <span id="er-footer-text">Powered by Claude</span>
+    <span class="er-footer-spacer"></span>
+    <span class="er-footer-usage" id="er-footer-usage">0 calls today</span>
+  </footer>
+</div>
+
+<!-- Keyboard shortcut cheat-sheet (press ?). Hidden by default. -->
+<div class="er-cheatsheet" id="er-cheatsheet" hidden>
+  <div class="er-cheatsheet-backdrop" data-cheatsheet-close></div>
+  <div class="er-cheatsheet-panel" role="dialog" aria-modal="true">
+    <div class="er-cheatsheet-header">
+      <span data-i18n="cheatsheetTitle">Keyboard Shortcuts</span>
+      <button type="button" class="er-icon-btn" data-cheatsheet-close aria-label="Close">✕</button>
+    </div>
+    <div class="er-cheatsheet-body">
+      <div class="er-cheat-row"><kbd>J</kbd> / <kbd>K</kbd><span data-i18n="cheatCycleDrafts">Cycle draft styles</span></div>
+      <div class="er-cheat-row"><kbd>R</kbd><span data-i18n="cheatInsert">Insert active draft into compose</span></div>
+      <div class="er-cheat-row"><kbd>C</kbd><span data-i18n="cheatCopy">Copy active draft</span></div>
+      <div class="er-cheat-row"><kbd>V</kbd><span data-i18n="cheatVariant">Switch between variants</span></div>
+      <div class="er-cheat-row"><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>E</kbd><span data-i18n="cheatToggle">Toggle sidebar</span></div>
+      <div class="er-cheat-row"><kbd>?</kbd><span data-i18n="cheatHelp">Show this help</span></div>
+      <div class="er-cheat-row"><kbd>Esc</kbd><span data-i18n="cheatClose">Close help</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Collapsed pill: clickable handle to re-expand the sidebar. -->
+<button
+  type="button"
+  class="er-collapsed-pill"
+  id="er-collapsed-pill"
+  data-i18n-aria-label="expand"
+  data-i18n-title="expand"
+  aria-label="Expand EchoReply"
+  title="Expand EchoReply"
+  hidden
+>
+  <span class="er-logo">✦</span>
+</button>

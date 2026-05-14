@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>EchoReply Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="header">
+        <div class="brand">
+          <span class="logo">✦</span>
+          <h1>EchoReply</h1>
+        </div>
+        <p class="tagline" data-i18n="optionsTagline">Understand the email. Then reply.</p>
+        <p class="account-line" id="account-line" hidden></p>
+      </header>
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="optionsUiLanguage">Interface Language</h2>
+        <p class="card-hint" data-i18n="optionsUiLanguageHint">Language of the EchoReply sidebar and this page.</p>
+        <select id="ui-language" class="select">
+          <option value="auto" data-i18n="optionsUiLangAuto">Auto (follow browser)</option>
+          <option value="en">English</option>
+          <option value="zh_CN">简体中文</option>
+        </select>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="optionsAiProvider">AI Provider</h2>
+        <p class="card-hint" data-i18n="optionsAiHint">Pick which model powers your replies.</p>
+
+        <div class="provider-toggle" role="radiogroup" aria-label="AI provider">
+          <label class="provider-option">
+            <input type="radio" name="provider" value="claude" checked />
+            <span class="provider-pill">
+              <span class="provider-dot"></span>
+              <span class="provider-label">Claude</span>
+              <span class="provider-sub">Anthropic</span>
+            </span>
+          </label>
+          <label class="provider-option">
+            <input type="radio" name="provider" value="openai" />
+            <span class="provider-pill">
+              <span class="provider-dot"></span>
+              <span class="provider-label">OpenAI</span>
+              <span class="provider-sub">GPT</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="model-row" id="claude-model-row">
+          <label class="model-label" for="claude-model" data-i18n="modelClaudeLabel">Claude model</label>
+          <select id="claude-model" class="select">
+            <option value="claude-haiku-4-5">Haiku 4.5 · fast + cheap</option>
+            <option value="claude-sonnet-4-5" selected>Sonnet 4.5 · balanced (default)</option>
+            <option value="claude-sonnet-4-6">Sonnet 4.6 · sharper</option>
+            <option value="claude-opus-4-7">Opus 4.7 · best, slowest, costliest</option>
+          </select>
+        </div>
+
+        <div class="model-row" id="openai-model-row" hidden>
+          <label class="model-label" for="openai-model" data-i18n="modelOpenAILabel">OpenAI model</label>
+          <select id="openai-model" class="select">
+            <option value="gpt-4o-mini" selected>GPT-4o mini · fast + cheap (default)</option>
+            <option value="gpt-4o">GPT-4o · best</option>
+            <option value="gpt-4-turbo">GPT-4 Turbo</option>
+            <option value="o1-mini">o1 mini · reasoning</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="optionsApiKey">API Key</h2>
+        <p class="card-hint" data-i18n="optionsApiKeyHint">
+          Your key is stored locally in your browser and never sent anywhere except
+          the provider you choose above.
+        </p>
+
+        <div class="key-row">
+          <input
+            id="api-key"
+            type="password"
+            placeholder="sk-ant-... or sk-..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="toggle-key" type="button" class="ghost-btn" data-i18n="optionsShow">
+            Show
+          </button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="optionsDefaultStyle">Default Draft Style</h2>
+        <p class="card-hint" data-i18n="optionsDefaultStyleHint">Which tone EchoReply highlights first.</p>
+
+        <select id="default-style" class="select">
+          <option value="professional" data-i18n="styleProfessional">🎩 Professional</option>
+          <option value="warm" data-i18n="styleWarm">🤝 Warm</option>
+          <option value="confident" data-i18n="styleConfident">⚡ Confident</option>
+        </select>
+
+        <label class="toggle-row">
+          <input type="checkbox" id="auto-draft" checked />
+          <span class="toggle-label">
+            <span class="toggle-title" data-i18n="optionsAutoDraftTitle">Auto-generate this draft when opening an email</span>
+            <span class="toggle-sub" data-i18n="optionsAutoDraftSub">Uses extra tokens but cuts a click. Turn off to generate only on demand.</span>
+          </span>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="optionsStyleSamples">Writing Style Samples</h2>
+        <p class="card-hint" data-i18n="optionsStyleHint">
+          Open your Sent folder in Gmail, open one of your past emails, and click
+          “Save sample” in the EchoReply sidebar. Up to 10 samples teach
+          EchoReply your voice. Drafts will start to sound like you.
+        </p>
+
+        <div class="style-summary">
+          <span id="style-count">0 samples saved</span>
+          <div class="style-actions">
+            <button type="button" class="ghost-btn" id="clear-samples" data-i18n="optionsClearAll">Clear all</button>
+          </div>
+        </div>
+
+        <div class="style-diagnosis" id="style-diagnosis" hidden>
+          <span class="style-diagnosis-label" data-i18n="diagnosisLabel">Your style:</span>
+          <span class="style-diagnosis-text" id="style-diagnosis-text"></span>
+        </div>
+
+        <div class="signature-block" id="signature-block" hidden>
+          <div class="signature-header">
+            <span class="signature-label" data-i18n="signatureLabel">Detected sign-off (used on every draft):</span>
+            <label class="signature-toggle">
+              <input type="checkbox" id="signature-enabled" checked />
+              <span data-i18n="signatureEnabled">Apply</span>
+            </label>
+          </div>
+          <pre class="signature-text" id="signature-text"></pre>
+        </div>
+
+        <label class="toggle-row">
+          <input type="checkbox" id="style-enabled" checked />
+          <span class="toggle-label">
+            <span class="toggle-title" data-i18n="optionsStyleEnabledTitle">Use samples when drafting</span>
+            <span class="toggle-sub" data-i18n="optionsStyleEnabledSub">Adds ~800 chars per saved sample to the prompt. Turn off if drafts feel off.</span>
+          </span>
+        </label>
+
+        <div id="style-list" class="style-list" hidden></div>
+
+        <label class="toggle-row">
+          <input type="checkbox" id="coach-enabled" />
+          <span class="toggle-label">
+            <span class="toggle-title" data-i18n="optionsCoachTitle">Live Style Coach</span>
+            <span class="toggle-sub" data-i18n="optionsCoachSub">When typing your own reply, ping the AI every few seconds to flag lines that don't sound like you. Uses tokens — turn off if quiet is preferred.</span>
+          </span>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="optionsHistoryTitle">Recent Replies</h2>
+        <p class="card-hint" data-i18n="optionsHistoryHint">Every reply you inserted. Click to copy and reuse phrasing.</p>
+        <div id="history-list" class="history-list" hidden></div>
+        <p id="history-empty" class="history-empty" data-i18n="optionsHistoryEmpty">No replies yet — insert a draft from the sidebar to start your timeline.</p>
+        <div class="style-summary">
+          <span id="history-count"></span>
+          <button type="button" class="ghost-btn" id="clear-history" data-i18n="optionsClearHistory">Clear history</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title" data-i18n="optionsStatsTitle">Usage Stats</h2>
+        <p class="card-hint" data-i18n="optionsStatsHint">A rough sense of how much EchoReply has helped you. Stored locally only.</p>
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <div class="stat-value" id="stat-drafts">0</div>
+            <div class="stat-label" data-i18n="statDrafts">Drafts</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-value" id="stat-refines">0</div>
+            <div class="stat-label" data-i18n="statRefines">Refines</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-value" id="stat-inserts">0</div>
+            <div class="stat-label" data-i18n="statInserts">Inserts</div>
+          </div>
+          <div class="stat-tile stat-tile-wide">
+            <div class="stat-value" id="stat-time-saved">0 min</div>
+            <div class="stat-label" data-i18n="statTimeSaved">Estimated time saved</div>
+          </div>
+        </div>
+        <div class="stat-style-row" id="stat-style-row"></div>
+        <div class="stat-period-row">
+          <span data-i18n="statsPeriod">Period:</span>
+          <select id="stats-period" class="select select-inline">
+            <option value="7">7d</option>
+            <option value="30" selected>30d</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="actions">
+        <button id="test-btn" type="button" class="ghost-btn" data-i18n="optionsTestBtn">Test Connection</button>
+        <button id="save-btn" type="button" class="primary-btn" data-i18n="optionsSaveBtn">Save</button>
+      </section>
+
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+
+      <footer class="footer">
+        <span>✦ EchoReply</span>
+        <span class="muted" data-i18n="optionsFooterMuted">v1.0.0 · API keys never leave your browser</span>
+      </footer>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>
