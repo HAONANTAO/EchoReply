@@ -247,13 +247,12 @@ function collectEls() {
 // ----- Header controls -----
 
 function bindHeader() {
-  els.settingsBtn.addEventListener("click", () => {
-    chrome.runtime.openOptionsPage();
-  });
-
-  els.openSettings.addEventListener("click", () => {
-    chrome.runtime.openOptionsPage();
-  });
+  // Content scripts can't call chrome.runtime.openOptionsPage() directly —
+  // that API only exists in extension pages and the service worker. Send a
+  // message to background.js, which forwards the call.
+  const openOptions = () => chrome.runtime.sendMessage({ type: "openOptionsPage" });
+  els.settingsBtn.addEventListener("click", openOptions);
+  els.openSettings.addEventListener("click", openOptions);
 
   els.collapseBtn.addEventListener("click", () => setCollapsed(true));
   els.collapsedPill.addEventListener("click", () => setCollapsed(false));

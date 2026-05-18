@@ -152,6 +152,8 @@
   "optionsAiHint":    { "message": "选择哪个模型来生成回复。" },
   "optionsApiKey":    { "message": "API Key" },
   "optionsApiKeyHint":{ "message": "Key 只保存在你的浏览器本地，除了你选择的提供方之外不会发到任何地方。" },
+  "optionsKeyLinkClaude":{ "message": "申请 Claude Key：" },
+  "optionsKeyLinkOpenAI":{ "message": "申请 OpenAI Key：" },
   "optionsShow":      { "message": "显示" },
   "optionsHide":      { "message": "隐藏" },
   "optionsDefaultStyle":{ "message": "默认草稿风格" },

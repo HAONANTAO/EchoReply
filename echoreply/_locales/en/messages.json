@@ -152,6 +152,8 @@
   "optionsAiHint":    { "message": "Pick which model powers your replies." },
   "optionsApiKey":    { "message": "API Key" },
   "optionsApiKeyHint":{ "message": "Your key is stored locally in your browser and never sent anywhere except the provider you choose above." },
+  "optionsKeyLinkClaude":{ "message": "Get a Claude key:" },
+  "optionsKeyLinkOpenAI":{ "message": "Get an OpenAI key:" },
   "optionsShow":      { "message": "Show" },
   "optionsHide":      { "message": "Hide" },
   "optionsDefaultStyle":{ "message": "Default Draft Style" },

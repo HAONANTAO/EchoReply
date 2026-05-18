@@ -186,6 +186,34 @@ body {
   gap: 8px;
 }
 
+.key-links {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  font-size: 12px;
+  color: var(--er-text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.key-links li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.key-links a {
+  color: var(--er-primary);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.key-links a:hover {
+  text-decoration: underline;
+}
+
 #api-key {
   flex: 1;
   height: 38px;
