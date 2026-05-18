@@ -3,6 +3,8 @@
   "extDesc":          { "message": "先读懂邮件，再回复。Gmail AI 邮件助手。" },
 
   "settings":         { "message": "设置" },
+  "popupBody":        { "message": "EchoReply 会在 Gmail 中加入一个 AI 侧边栏。先在设置里填入 Claude 或 OpenAI 的 API Key，然后在 Gmail 中打开任意邮件即可。" },
+  "popupOpenGmail":   { "message": "打开 Gmail" },
   "collapse":         { "message": "收起" },
   "expand":           { "message": "展开 EchoReply" },
 
@@ -169,5 +171,5 @@
   "optionsSaveEmpty": { "message": "请先填入 API Key 再保存。" },
   "optionsSaved":     { "message": "已保存。回 Gmail 即可开始使用 EchoReply。" },
   "optionsClearedSamples":{ "message": "已清除所有样本。" },
-  "optionsFooterMuted":{ "message": "v1.0.0 · API Key 永不离开你的浏览器" }
+  "optionsFooterMuted":{ "message": "v1.0.1 · API Key 永不离开你的浏览器" }
 }

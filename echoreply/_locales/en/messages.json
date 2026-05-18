@@ -3,6 +3,8 @@
   "extDesc":          { "message": "Understand the email. Then reply. AI-powered email coach for Gmail." },
 
   "settings":         { "message": "Settings" },
+  "popupBody":        { "message": "EchoReply adds an AI sidebar to Gmail. Set your Claude or OpenAI key in Settings, then open any email in Gmail." },
+  "popupOpenGmail":   { "message": "Open Gmail" },
   "collapse":         { "message": "Collapse" },
   "expand":           { "message": "Expand EchoReply" },
 
@@ -169,5 +171,5 @@
   "optionsSaveEmpty": { "message": "Please enter your API key before saving." },
   "optionsSaved":     { "message": "Saved. Open Gmail to start using EchoReply." },
   "optionsClearedSamples":{ "message": "Style samples cleared." },
-  "optionsFooterMuted":{ "message": "v1.0.0 · API keys never leave your browser" }
+  "optionsFooterMuted":{ "message": "v1.0.1 · API keys never leave your browser" }
 }
