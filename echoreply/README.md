@@ -14,9 +14,17 @@ You bring your own Claude or OpenAI API key. No backend, no telemetry — your k
 
 ---
 
+## 📥 Download / Install
+
+**👉 [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/leibhmkahdofhfallekeoljmiajcjjlk)** — one-click install, auto-updates.
+
+Prefer to load it manually? **[Download echoreply.zip](https://github.com/HAONANTAO/EchoReply/raw/main/echoreply.zip)** (or grab the source via `git clone`) and follow the Developer Mode steps below.
+
+---
+
 ## Install (Developer Mode)
 
-1. Clone or download this repo.
+1. **[Download echoreply.zip](https://github.com/HAONANTAO/EchoReply/raw/main/echoreply.zip)** and unzip it, or `git clone https://github.com/HAONANTAO/EchoReply.git`.
 2. Open Chrome and go to `chrome://extensions/`.
 3. Toggle **Developer mode** on (top-right corner).
 4. Click **Load unpacked**.
